@@ -11,10 +11,7 @@ import org.javeriana.sd.streaming.app.net.message.processor.RemoveStreamingDevic
 import org.javeriana.sd.streaming.app.util.GsonUtils;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 
 @Log4j2
 public class UDPServerSocketManager extends Thread {
@@ -32,17 +29,20 @@ public class UDPServerSocketManager extends Thread {
     }
 
     public void startThread() {
-        stopThread();
+        log.info("Starting thread UDPServerSocketManager...");
         this.isThreadAlive = true;
-        startThread();
+        start();
+        log.info("Started UDPServerSocketManager!");
     }
 
     public void stopThread() {
+        log.info("Stopping thread UDPServerSocketManager...");
         this.isThreadAlive = false;
         if (socket != null) {
             socket.disconnect();
             socket.close();
         }
+        log.info("Stopped UDPServerSocketManager!");
     }
 
     @Override
@@ -80,16 +80,31 @@ public class UDPServerSocketManager extends Thread {
             return;
         }
         Message message = (Message) GsonUtils.toObject(data, Message.class);
+        log.info(String.format("Received message: %s", data));
         if (message != null) {
             switch (message.getCode()) {
                 case Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES:
-                    send(new StreamingDevicesMessage(Constants.UDP_MESSAGE_FOUND_STREAMING_DEVICES, "",
-                            new Channel(InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT)));
+                    new UDPClientSocketManager(
+                            packet.getAddress().getHostAddress(), packet.getPort(),
+                            new StreamingDevicesMessage(Constants.UDP_MESSAGE_FOUND_STREAMING_DEVICES, "",
+                                    new Channel(InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT, packet.getPort())),
+                            false).startThread();
+                    break;
                 case Constants.UDP_MESSAGE_FOUND_STREAMING_DEVICES:
                     new FoundStreamingDevicesProcessor(channelPublicFilePath, data).execute();
                     break;
-                case Constants.UDP_MESSAGE_START_STREAMING:
+                case Constants.UDP_MESSAGE_START_STREAMING_REQUEST:
                     //TODO call vlc and start in rtp mode
+                    new UDPClientSocketManager(
+                            packet.getAddress().getHostAddress(), packet.getPort(),
+                            new Message(Constants.UDP_MESSAGE_START_STREAMING_OK),
+                            false).startThread();
+                    break;
+                case Constants.UDP_MESSAGE_START_STREAMING_OK:
+                    //TODO so now call vlc in client mode
+                    break;
+                case Constants.UDP_MESSAGE_START_STREAMING_FAILED:
+                    log.error(String.format("Cannot connect to streaming server: %s", message.getMessage()));
                     break;
                 case Constants.UDP_MESSAGE_STOP_STREAMING:
                     new RemoveStreamingDevicesProcessor(channelPublicFilePath, data).execute();

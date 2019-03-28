@@ -1,6 +1,4 @@
-package org.javeriana.sd.streaming.app
-
--app;
+package org.javeriana.sd.streaming.app;
 
 import static org.junit.Assert.assertTrue;
 

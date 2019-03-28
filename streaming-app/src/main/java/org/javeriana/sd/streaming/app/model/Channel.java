@@ -7,10 +7,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class Channel {
     private String address;
-    private int port;
+    private int rtpPort;
+    private int udpPort;
 
     @Override
     public String toString() {
-        return "Channel{address='" + address + ",port=" + port + "}";
+        return "Channel{address='" + address + ",rtpPort=" + rtpPort + ",udpPort=" + udpPort + "}";
     }
 }
