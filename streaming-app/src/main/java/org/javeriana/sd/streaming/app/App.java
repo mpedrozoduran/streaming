@@ -50,7 +50,7 @@ public class App
         serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile());
         serverSocketManager.startThread();
         Thread.sleep(2000);
-        serverSocketManager.send(new Message(Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES));
+        serverSocketManager.send(new Message(Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES, args.getPort()));
         log.info(String.format("Waiting for %d seconds to receive streaming devices...", App.DEFAULT_WAIT_TIME / 1000));
         Thread.sleep(App.DEFAULT_WAIT_TIME);
         Channels channels = (Channels) FileUtils.read(args.getChannelFile(), Channels.class);
@@ -58,7 +58,8 @@ public class App
             log.info(String.format("Found %d streaming devices...", channels.getChannels().size()));
             Channel channel = channels.getChannels().get(0);
             new UDPClientSocketManager(
-                    channel.getAddress(), channel.getUdpPort(), new Message(Constants.UDP_MESSAGE_START_STREAMING_REQUEST),
+                    channel.getAddress(), channel.getUdpPort(),
+                    new Message(Constants.UDP_MESSAGE_START_STREAMING_REQUEST, args.getPort()),
                     false)
                     .startThread();
         } else {

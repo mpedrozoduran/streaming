@@ -6,6 +6,7 @@ import lombok.Data;
 public class Message {
     private int code;
     private String message;
+    private int serverPort;
 
     public Message(int code) {
         this.code = code;
@@ -14,5 +15,10 @@ public class Message {
     public Message(int code, String message) {
         this.code = code;
         this.message = message;
+    }
+
+    public Message(int code, int serverPort) {
+        this.code = code;
+        this.serverPort = serverPort;
     }
 }

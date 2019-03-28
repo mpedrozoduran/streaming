@@ -85,9 +85,10 @@ public class UDPServerSocketManager extends Thread {
             switch (message.getCode()) {
                 case Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES:
                     new UDPClientSocketManager(
-                            packet.getAddress().getHostAddress(), packet.getPort(),
+                            packet.getAddress().getHostAddress(), message.getServerPort(),
                             new StreamingDevicesMessage(Constants.UDP_MESSAGE_FOUND_STREAMING_DEVICES, "",
-                                    new Channel(InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT, packet.getPort())),
+                                    new Channel(InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT,
+                                            message.getServerPort())),
                             false).startThread();
                     break;
                 case Constants.UDP_MESSAGE_FOUND_STREAMING_DEVICES:
@@ -96,7 +97,7 @@ public class UDPServerSocketManager extends Thread {
                 case Constants.UDP_MESSAGE_START_STREAMING_REQUEST:
                     //TODO call vlc and start in rtp mode
                     new UDPClientSocketManager(
-                            packet.getAddress().getHostAddress(), packet.getPort(),
+                            packet.getAddress().getHostAddress(), message.getServerPort(),
                             new Message(Constants.UDP_MESSAGE_START_STREAMING_OK),
                             false).startThread();
                     break;
