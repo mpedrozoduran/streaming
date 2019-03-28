@@ -9,6 +9,7 @@ import org.javeriana.sd.streaming.app.net.message.StreamingDevicesMessage;
 import org.javeriana.sd.streaming.app.net.message.processor.FoundStreamingDevicesProcessor;
 import org.javeriana.sd.streaming.app.net.message.processor.RemoveStreamingDevicesProcessor;
 import org.javeriana.sd.streaming.app.util.GsonUtils;
+import org.javeriana.sd.streaming.app.util.SystemUtils;
 
 import java.io.IOException;
 import java.net.*;
@@ -95,14 +96,14 @@ public class UDPServerSocketManager extends Thread {
                     new FoundStreamingDevicesProcessor(channelPublicFilePath, data).execute();
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_REQUEST:
-                    //TODO call vlc and start in rtp mode
+                    SystemUtils.runProgram("server", InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT);
                     new UDPClientSocketManager(
                             packet.getAddress().getHostAddress(), message.getServerPort(),
                             new Message(Constants.UDP_MESSAGE_START_STREAMING_OK),
                             false).startThread();
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_OK:
-                    //TODO so now call vlc in client mode
+                    SystemUtils.runProgram("client", InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT);
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_FAILED:
                     log.error(String.format("Cannot connect to streaming server: %s", message.getMessage()));

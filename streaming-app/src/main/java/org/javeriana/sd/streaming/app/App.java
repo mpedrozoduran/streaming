@@ -22,13 +22,6 @@ public class App
 {
     private static final long DEFAULT_WAIT_TIME = 10000;
 
-    private String VLC_MACOSX_PATH = "/Applications/VLC.app/Contents/MacOS/";
-    private String VLC_MACOSX_RTP = VLC_MACOSX_PATH + "VLC -vvv \"/Users/mpedrozoduran/Downloads/The Ninth Gate (1999)/The.Ninth.Gate.1999.720p.BluRay.x264.YIFY.mp4\" --sout '#rtp{dst=%S,port=%S,sdp=rtsp://%S:8080/test.sdp}'";
-    private String VLC_MACOSX_RTP_CLIENT = VLC_MACOSX_PATH + "VLC rtsp://%S:8080/test.sdp";
-
-    private String VLC_LINUX_RTP = "vlc -vvv \"/Users/mpedrozoduran/Downloads/The Ninth Gate (1999)/The.Ninth.Gate.1999.720p.BluRay.x264.YIFY.mp4\" --sout '#rtp{dst=%S,port=%S,sdp=rtsp://%S:8080/test.sdp}'";
-    private String VLC_LINUX_RTP_CLIENT = "vlc rtsp://%S:8080/test.sdp";
-
     private UDPServerSocketManager serverSocketManager;
 
     public static void main( String[] args )

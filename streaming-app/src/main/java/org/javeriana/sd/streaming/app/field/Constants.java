@@ -8,4 +8,8 @@ public class Constants {
     public static final int UDP_MESSAGE_START_STREAMING_OK = 1004;
     public static final int UDP_MESSAGE_START_STREAMING_FAILED = 1005;
     public static final int UDP_MESSAGE_STOP_STREAMING = 1099;
+
+    public static final int OS_OSX = 1;
+    public static final int OS_UNIX = 2;
+    public static final int OS_WIN = 3;
 }
