@@ -22,6 +22,13 @@ public class App
 {
     private static final long DEFAULT_WAIT_TIME = 10000;
 
+    private String VLC_MACOSX_PATH = "/Applications/VLC.app/Contents/MacOS/";
+    private String VLC_MACOSX_RTP = VLC_MACOSX_PATH + "VLC -vvv \"/Users/mpedrozoduran/Downloads/The Ninth Gate (1999)/The.Ninth.Gate.1999.720p.BluRay.x264.YIFY.mp4\" --sout '#rtp{dst=%S,port=%S,sdp=rtsp://%S:8080/test.sdp}'";
+    private String VLC_MACOSX_RTP_CLIENT = VLC_MACOSX_PATH + "VLC rtsp://%S:8080/test.sdp";
+
+    private String VLC_LINUX_RTP = "vlc -vvv \"/Users/mpedrozoduran/Downloads/The Ninth Gate (1999)/The.Ninth.Gate.1999.720p.BluRay.x264.YIFY.mp4\" --sout '#rtp{dst=%S,port=%S,sdp=rtsp://%S:8080/test.sdp}'";
+    private String VLC_LINUX_RTP_CLIENT = "vlc rtsp://%S:8080/test.sdp";
+
     private UDPServerSocketManager serverSocketManager;
 
     public static void main( String[] args )
@@ -49,8 +56,9 @@ public class App
     private void startClient(Args args) throws InterruptedException, IOException {
         serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile());
         serverSocketManager.startThread();
-        Thread.sleep(2000);
-        serverSocketManager.send(new Message(Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES));
+        new UDPClientSocketManager("255.255.255.255", args.getPort(),
+                new Message(Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES, args.getPort()), true).startThread();
+        Thread.sleep(5000);
         log.info(String.format("Waiting for %d seconds to receive streaming devices...", App.DEFAULT_WAIT_TIME / 1000));
         Thread.sleep(App.DEFAULT_WAIT_TIME);
         Channels channels = (Channels) FileUtils.read(args.getChannelFile(), Channels.class);
@@ -58,7 +66,8 @@ public class App
             log.info(String.format("Found %d streaming devices...", channels.getChannels().size()));
             Channel channel = channels.getChannels().get(0);
             new UDPClientSocketManager(
-                    channel.getAddress(), channel.getUdpPort(), new Message(Constants.UDP_MESSAGE_START_STREAMING_REQUEST),
+                    channel.getAddress(), channel.getUdpPort(),
+                    new Message(Constants.UDP_MESSAGE_START_STREAMING_REQUEST, args.getPort()),
                     false)
                     .startThread();
         } else {

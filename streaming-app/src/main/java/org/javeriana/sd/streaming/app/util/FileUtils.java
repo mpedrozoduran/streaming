@@ -1,5 +1,6 @@
 package org.javeriana.sd.streaming.app.util;
 
+import org.javeriana.sd.streaming.app.model.Channel;
 import org.javeriana.sd.streaming.app.model.Channels;
 
 import java.io.FileNotFoundException;
@@ -20,10 +21,11 @@ public class FileUtils {
 
     public static Object read(String filepath, Class aClass) throws IOException {
         Path path = Paths.get(filepath);
-        if (Files.exists(path)) {
-            String json = new String(Files.readAllBytes(path));
-            return GsonUtils.toObject(json, aClass);
+        if (!Files.exists(path)) {
+            Files.createFile(path);
         }
-        throw new FileNotFoundException(String.format("File '%s' not found", filepath));
+        String json = new String(Files.readAllBytes(path));
+        Channels channels = (Channels) GsonUtils.toObject(json, aClass);
+        return (channels == null) ? new Channels() : channels;
     }
 }

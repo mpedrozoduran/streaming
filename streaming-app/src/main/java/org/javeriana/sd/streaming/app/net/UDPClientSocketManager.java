@@ -27,7 +27,7 @@ public class UDPClientSocketManager extends Thread {
     }
 
     public void startThread() {
-        startThread();
+        start();
     }
 
     public void stopThread() {
@@ -40,12 +40,12 @@ public class UDPClientSocketManager extends Thread {
     @Override
     public void run() {
         try {
-            socket = new DatagramSocket(PORT, InetAddress.getByAddress(address.getBytes()));
+            socket = new DatagramSocket();
             if (isBroadcast) {
                 socket.setBroadcast(true);
             }
             String payload = GsonUtils.toJson(message);
-            socket.send(new DatagramPacket(payload.getBytes(), payload.getBytes().length));
+            socket.send(new DatagramPacket(payload.getBytes(), payload.getBytes().length, InetAddress.getByName(address), PORT));
         } catch (IOException e) {
             e.printStackTrace();
         }
