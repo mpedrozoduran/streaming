@@ -47,7 +47,7 @@ public class App
     }
 
     private void startClient(Args args) throws InterruptedException, IOException {
-        serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile());
+        serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile(), args.getResourceToStream());
         serverSocketManager.startThread();
         new UDPClientSocketManager("255.255.255.255", args.getPort(),
                 new Message(Constants.UDP_MESSAGE_SEARCH_STREAMING_DEVICES, args.getPort()), true).startThread();
@@ -69,7 +69,7 @@ public class App
     }
 
     private void startServer(Args args) {
-        serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile());
+        serverSocketManager = new UDPServerSocketManager(args.getPort(), args.getChannelFile(), args.getResourceToStream());
         serverSocketManager.startThread();
     }
 }

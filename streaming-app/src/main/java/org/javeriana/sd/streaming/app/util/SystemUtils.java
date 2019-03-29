@@ -8,12 +8,12 @@ import java.io.IOException;
 @Log4j2
 public class SystemUtils {
     private static String VLC_MACOSX_RTP =
-            SystemUtils.class.getClassLoader().getResource("vlc_macosx_rtp.sh").getPath() + " %s %s";
+            SystemUtils.class.getClassLoader().getResource("vlc_macosx_rtp.sh").getPath() + " %s %s %s";
     private static String VLC_MACOSX_RTP_CLIENT =
             SystemUtils.class.getClassLoader().getResource("vlc_macosx_client.sh").getPath() + " %s %s";
 
     private static String VLC_LINUX_RTP =
-            SystemUtils.class.getClassLoader().getResource("vlc_linux_rtp.sh").getPath() + " %s %s";
+            SystemUtils.class.getClassLoader().getResource("vlc_linux_rtp.sh").getPath() + " %s %s %s";
     private static String VLC_LINUX_RTP_CLIENT =
             SystemUtils.class.getClassLoader().getResource("vlc_linux_client.sh").getPath() + " %s %s";
 
@@ -28,11 +28,11 @@ public class SystemUtils {
         }
     }
 
-    public static void runProgram(String mode, String address, int port) throws IOException, InterruptedException {
+    public static void runProgram(String mode, String address, int port, String resourceToStream) throws IOException {
         if (checkOS() == Constants.OS_OSX) {
             if (mode.equals("server"))  {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_MACOSX_RTP, address, port);
+                String url = String.format(SystemUtils.VLC_MACOSX_RTP, address, port, resourceToStream);
                 runtime.exec(url);
             } else {
                 Runtime runtime = Runtime.getRuntime();
@@ -42,7 +42,7 @@ public class SystemUtils {
         } else if (checkOS() == Constants.OS_UNIX) {
             if (mode.equals("server"))  {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_LINUX_RTP, address, port);
+                String url = String.format(SystemUtils.VLC_LINUX_RTP, address, port, resourceToStream);
                 runtime.exec(url);
             } else {
                 Runtime runtime = Runtime.getRuntime();

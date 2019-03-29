@@ -14,4 +14,7 @@ public class Args {
 
     @Parameter(names = { "-channelFile" }, description = "Path where to save channels", required = true)
     private String channelFile;
+
+    @Parameter(names = { "-resourceToStream" }, description = "Path to the resource to stream", required = true)
+    private String resourceToStream;
 }
