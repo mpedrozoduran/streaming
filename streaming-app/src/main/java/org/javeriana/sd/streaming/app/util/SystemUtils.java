@@ -21,7 +21,7 @@ public class SystemUtils {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("os x")) {
             return Constants.OS_OSX;
-        } else if (os.contains("nix")) {
+        } else if (os.contains("nix") || os.contains("nux")) {
             return Constants.OS_UNIX;
         } else {
             return Constants.OS_WIN;

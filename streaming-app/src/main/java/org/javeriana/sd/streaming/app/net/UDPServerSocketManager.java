@@ -97,13 +97,14 @@ public class UDPServerSocketManager extends Thread {
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_REQUEST:
                     SystemUtils.runProgram("server", InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT);
+                    Thread.sleep(3000);
                     new UDPClientSocketManager(
                             packet.getAddress().getHostAddress(), message.getServerPort(),
                             new Message(Constants.UDP_MESSAGE_START_STREAMING_OK),
                             false).startThread();
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_OK:
-                    SystemUtils.runProgram("client", InetAddress.getLocalHost().getHostAddress(), DEFAULT_RTSP_PORT);
+                    SystemUtils.runProgram("client", packet.getAddress().getHostAddress(), DEFAULT_RTSP_PORT);
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_FAILED:
                     log.error(String.format("Cannot connect to streaming server: %s", message.getMessage()));
