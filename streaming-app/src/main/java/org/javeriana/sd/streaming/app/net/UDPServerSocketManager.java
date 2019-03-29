@@ -60,7 +60,7 @@ public class UDPServerSocketManager extends Thread {
             try {
                 socket.receive(packet);
                 processIncomingMessage(packet);
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -74,7 +74,7 @@ public class UDPServerSocketManager extends Thread {
         }
     }
 
-    private void processIncomingMessage(DatagramPacket packet) throws IOException {
+    private void processIncomingMessage(DatagramPacket packet) throws IOException, InterruptedException {
         String data = extractPacketData(packet);
         if (data == null) {
             log.warn("Packet payload is null!");
