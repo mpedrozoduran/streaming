@@ -7,15 +7,11 @@ import java.io.IOException;
 
 @Log4j2
 public class SystemUtils {
-    private static String VLC_MACOSX_RTP =
-            SystemUtils.class.getClassLoader().getResource("vlc_macosx_rtp.sh").getPath() + " %s %s %s";
-    private static String VLC_MACOSX_RTP_CLIENT =
-            SystemUtils.class.getClassLoader().getResource("vlc_macosx_client.sh").getPath() + " %s %s";
+    private static String VLC_MACOSX_RTP = "%s/vlc_macosx_rtp.sh %s %s %s";
+    private static String VLC_MACOSX_RTP_CLIENT = "%s/vlc_macosx_client.sh %s %s";
 
-    private static String VLC_LINUX_RTP =
-            SystemUtils.class.getClassLoader().getResource("vlc_linux_rtp.sh").getPath() + " %s %s %s";
-    private static String VLC_LINUX_RTP_CLIENT =
-            SystemUtils.class.getClassLoader().getResource("vlc_linux_client.sh").getPath() + " %s %s";
+    private static String VLC_LINUX_RTP = "%s/vlc_linux_rtp.sh %s %s %s";
+    private static String VLC_LINUX_RTP_CLIENT = "%s/vlc_linux_client.sh %s %s";
 
     public static int checkOS() {
         String os = System.getProperty("os.name").toLowerCase();
@@ -28,25 +24,25 @@ public class SystemUtils {
         }
     }
 
-    public static void runProgram(String mode, String address, int port, String resourceToStream) throws IOException {
+    public static void runProgram(String mode, String address, int port, String basePath, String resourceToStream) throws IOException {
         if (checkOS() == Constants.OS_OSX) {
             if (mode.equals("server"))  {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_MACOSX_RTP, address, port, resourceToStream);
+                String url = String.format(SystemUtils.VLC_MACOSX_RTP, basePath, address, port, resourceToStream);
                 runtime.exec(url);
             } else {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_MACOSX_RTP_CLIENT, address, port);
+                String url = String.format(SystemUtils.VLC_MACOSX_RTP_CLIENT, basePath, address, port);
                 runtime.exec(url);
             }
         } else if (checkOS() == Constants.OS_UNIX) {
             if (mode.equals("server"))  {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_LINUX_RTP, address, port, resourceToStream);
+                String url = String.format(SystemUtils.VLC_LINUX_RTP, basePath, address, port, resourceToStream);
                 runtime.exec(url);
             } else {
                 Runtime runtime = Runtime.getRuntime();
-                String url = String.format(SystemUtils.VLC_LINUX_RTP_CLIENT, address, port);
+                String url = String.format(SystemUtils.VLC_LINUX_RTP_CLIENT, basePath, address, port);
                 runtime.exec(url);
             }
         }

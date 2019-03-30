@@ -23,11 +23,13 @@ public class UDPServerSocketManager extends Thread {
     private DatagramSocket socket;
 
     private final String channelPublicFilePath;
+    private final String basePath;
     private final String resourceToStream;
 
-    public UDPServerSocketManager(int port, String channelPublicFilePath, String resourceToStream) {
+    public UDPServerSocketManager(int port, String channelPublicFilePath, String basePath, String resourceToStream) {
         this.PORT = port;
         this.channelPublicFilePath = channelPublicFilePath;
+        this.basePath = basePath;
         this.resourceToStream = resourceToStream;
     }
 
@@ -99,7 +101,7 @@ public class UDPServerSocketManager extends Thread {
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_REQUEST:
                     SystemUtils.runProgram("server", InetAddress.getLocalHost().getHostAddress(),
-                            DEFAULT_RTSP_PORT, resourceToStream);
+                            DEFAULT_RTSP_PORT, basePath, resourceToStream);
                     Thread.sleep(3000);
                     new UDPClientSocketManager(
                             packet.getAddress().getHostAddress(), message.getServerPort(),
@@ -108,7 +110,7 @@ public class UDPServerSocketManager extends Thread {
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_OK:
                     SystemUtils.runProgram("client", packet.getAddress().getHostAddress(), DEFAULT_RTSP_PORT,
-                            resourceToStream);
+                            basePath, resourceToStream);
                     break;
                 case Constants.UDP_MESSAGE_START_STREAMING_FAILED:
                     log.error(String.format("Cannot connect to streaming server: %s", message.getMessage()));

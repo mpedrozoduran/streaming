@@ -15,11 +15,11 @@ public class SystemUtilsTest {
 
     @Test
     public void runProgramClient() throws IOException {
-        SystemUtils.runProgram("client", "192.168.1.13", 8889, resourceToStream);
+        SystemUtils.runProgram("client", "192.168.1.13", 8889, "", resourceToStream);
     }
 
     @Test
     public void runProgramServer() throws IOException {
-        SystemUtils.runProgram("server", "192.168.43.80", 8889, resourceToStream);
+        SystemUtils.runProgram("server", "192.168.43.80", 8889, "", resourceToStream);
     }
 }
